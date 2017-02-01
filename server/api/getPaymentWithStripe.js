@@ -14,22 +14,25 @@ var stripe = require("stripe")(
 router.post('/', function(req,res,next){
 
 	console.log(req.body)
-	const amount = req.body.amount;
-	const email = req.body.email;
+	const amount = '99'
+	const email = 'joe@something.com'
 	const token = req.body.stripeToken;
+
+	const callback = function(err, charge) {
+		// if err throw error
+		if(charge.outcome.network_status ==='approved_by_network'){
+			 res.sendStatus(200)
+		}	
+	};
 
 	stripe.charges.create({
 	  amount: amount,
 	  currency: "usd",
 	  source: token, // obtained with Stripe.js
 	  description: "Charge for " + email
-	}, function(err, charge) {
-	  // asynchronously called
-	});
+	}, callback)
 
-
-
-	next();
+	// next();
 })
 
 

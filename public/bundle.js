@@ -28188,7 +28188,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+			value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -28209,149 +28209,133 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	// <script type="text/javascript">
+	// Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
+	
 	var checkOut = function (_React$Component) {
-		_inherits(checkOut, _React$Component);
+			_inherits(checkOut, _React$Component);
 	
-		function checkOut() {
-			_classCallCheck(this, checkOut);
+			function checkOut() {
+					_classCallCheck(this, checkOut);
 	
-			var _this = _possibleConstructorReturn(this, (checkOut.__proto__ || Object.getPrototypeOf(checkOut)).call(this));
+					var _this = _possibleConstructorReturn(this, (checkOut.__proto__ || Object.getPrototypeOf(checkOut)).call(this));
 	
-			_this.getToken = _this.getToken.bind(_this);
-			return _this;
-		}
+					_this.state = {
+							buttonStatus: false
+					};
 	
-		_createClass(checkOut, [{
-			key: 'getToken',
-			value: function getToken(event) {
-				event.preventDefault();
+					_this.getToken = _this.getToken.bind(_this);
+					_this.responseHandler = _this.responseHandler.bind(_this);
+					return _this;
+			}
 	
-				function stripeResponseHandler(status, response) {
-					// Grab the form:
-					var $form = $('#payment-form');
-	
-					if (response.error) {
-						// Problem!
-	
-						// Show the errors on the form:
-						$form.find('.payment-errors').text(response.error.message);
-						$form.find('.submit').prop('disabled', false); // Re-enable submission
-					} else {
-						// Token was created!
-	
-						console.log('before token');
-						// Get the token ID:
-						var token = response.id;
-	
-						console.log('after token');
-						// axios.post('/pay', {token: token})
-						// Insert the token ID into the form so it gets submitted to the server:
-						$form.append($('<input type="hidden" name="stripeToken">').val(token));
-	
-						// Submit the form:
-						$form.get(0).submit();
-	
-						console.log('after form submission');
+			_createClass(checkOut, [{
+					key: 'componentDidMount',
+					value: function componentDidMount() {
+							Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
 					}
-				};
+			}, {
+					key: 'getToken',
+					value: function getToken(event) {
+							event.preventDefault();
+							this.setState({ buttonStatus: true });
 	
-				$(function () {
-					var $form = $('#payment-form');
-					$form.submit(function (event) {
-						// Disable the submit button to prevent repeated clicks:
-						$form.find('.submit').prop('disabled', true);
+							var temp = this.state.buttonStatus;
+							console.log(event.currentTarget);
+							Stripe.card.createToken(event.currentTarget, this.responseHandler);
+					}
+			}, {
+					key: 'responseHandler',
+					value: function responseHandler(status, response) {
+							if (response.error) {} else {
+									this.setState({ buttonStatus: false });
+									_axios2.default.post('/api/pay', { stripeToken: response.id });
+									console.log(this.state);
+							}
+					}
+			}, {
+					key: 'render',
+					value: function render() {
+							var _this2 = this;
 	
-						// Request a token from Stripe:
-						Stripe.card.createToken($form, stripeResponseHandler);
-	
-						// Prevent the form from being submitted:
-						return false;
-					});
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-	
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'form',
-						{ onSubmit: function onSubmit(event) {
-								return _this2.getToken(event);
-							}, action: '/api/pay', method: 'POST', id: 'payment-form' },
-						_react2.default.createElement('span', { className: 'payment-errors' }),
-						_react2.default.createElement(
-							'div',
-							{ className: 'form-row' },
-							_react2.default.createElement(
-								'label',
-								null,
-								_react2.default.createElement(
-									'span',
+							return _react2.default.createElement(
+									'div',
 									null,
-									'Card Number'
-								),
-								_react2.default.createElement('input', { type: 'text', size: '20', 'data-stripe': 'number' })
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'form-row' },
-							_react2.default.createElement(
-								'label',
-								null,
-								_react2.default.createElement(
-									'span',
-									null,
-									'Expiration (MM/YY)'
-								),
-								_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_month' })
-							),
-							_react2.default.createElement(
-								'span',
-								null,
-								' / '
-							),
-							_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_year' })
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'form-row' },
-							_react2.default.createElement(
-								'label',
-								null,
-								_react2.default.createElement(
-									'span',
-									null,
-									'CVC'
-								),
-								_react2.default.createElement('input', { type: 'text', size: '4', 'data-stripe': 'cvc' })
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'form-row' },
-							_react2.default.createElement(
-								'label',
-								null,
-								_react2.default.createElement(
-									'span',
-									null,
-									'Billing ZIP Code'
-								),
-								_react2.default.createElement('input', { type: 'text', size: '6', 'data-stripe': 'address_zip' })
-							)
-						),
-						_react2.default.createElement('input', { type: 'submit', className: 'submit', value: 'Submit Payment' })
-					)
-				);
-			}
-		}]);
+									_react2.default.createElement(
+											'form',
+											{ onSubmit: function onSubmit(event) {
+															return _this2.getToken(event);
+													}, action: '/api/pay', method: 'POST', id: 'payment-form' },
+											_react2.default.createElement('span', { className: 'payment-errors' }),
+											_react2.default.createElement(
+													'div',
+													{ className: 'form-row' },
+													_react2.default.createElement(
+															'label',
+															null,
+															_react2.default.createElement(
+																	'span',
+																	null,
+																	'Card Number'
+															),
+															_react2.default.createElement('input', { type: 'text', size: '20', 'data-stripe': 'number' })
+													)
+											),
+											_react2.default.createElement(
+													'div',
+													{ className: 'form-row' },
+													_react2.default.createElement(
+															'label',
+															null,
+															_react2.default.createElement(
+																	'span',
+																	null,
+																	'Expiration (MM/YY)'
+															),
+															_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_month' })
+													),
+													_react2.default.createElement(
+															'span',
+															null,
+															' / '
+													),
+													_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_year' })
+											),
+											_react2.default.createElement(
+													'div',
+													{ className: 'form-row' },
+													_react2.default.createElement(
+															'label',
+															null,
+															_react2.default.createElement(
+																	'span',
+																	null,
+																	'CVC'
+															),
+															_react2.default.createElement('input', { type: 'text', size: '4', 'data-stripe': 'cvc' })
+													)
+											),
+											_react2.default.createElement(
+													'div',
+													{ className: 'form-row' },
+													_react2.default.createElement(
+															'label',
+															null,
+															_react2.default.createElement(
+																	'span',
+																	null,
+																	'Billing ZIP Code'
+															),
+															_react2.default.createElement('input', { type: 'text', size: '6', 'data-stripe': 'address_zip' })
+													)
+											),
+											_react2.default.createElement('input', { type: 'submit', className: 'submit', value: 'Submit Payment', disabled: this.state.buttonStatus ? 'disabled' : '' })
+									)
+							);
+					}
+			}]);
 	
-		return checkOut;
+			return checkOut;
 	}(_react2.default.Component);
 	
 	// export default checkOut
