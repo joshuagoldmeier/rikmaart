@@ -8,4 +8,6 @@ router.use('/stories', require('./stories/story.router'));
 
 router.use('/login', require('./login/login.router'));
 
+router.use('/pay', require('./getPaymentWithStripe.js'))
+
 module.exports = router;

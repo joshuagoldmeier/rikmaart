@@ -4,10 +4,7 @@
   "description": "",
   "main": "server/start.js",
   "scripts": {
-    "start": "webpack -w & nodemon --watch server -e js,html server/start.js",
-    "seed": "node seed",
-    "db-init": "./db-init.sh",
-    "postinstall": "npm run db-init"
+    "start": "webpack -w & nodemon --watch server -e js,html server/start.js"
   },
   "author": "Joshua Goldmeier",
   "license": "ISC",
@@ -40,6 +37,7 @@
     "redux-thunk": "^2.1.0",
     "request": "^2.74.0",
     "sequelize": "^3.23.1",
+    "stripe": "^4.15.0",
     "webpack": "^1.13.2"
   },
   "devDependencies": {

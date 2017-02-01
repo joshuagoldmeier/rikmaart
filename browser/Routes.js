@@ -6,7 +6,7 @@ import Products from './components/Products';
 import CustomOrder from './components/CustomOrder';
 import About from './components/About';
 import Contact from './components/Contact';
-
+import payWithStripe from './components/checkOutWithStripe';
 
 
 
@@ -18,6 +18,8 @@ const Routes = () => (
       <Route path="customorder" component={CustomOrder} />
       <Route path="about" component={About} />
       <Route path="contact" component={Contact} />
+      <Route path="pay" component={payWithStripe} />
+
     </Route>
   </Router>
 );
