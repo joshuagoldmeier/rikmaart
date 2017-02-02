@@ -10,4 +10,6 @@ router.use('/login', require('./login/login.router'));
 
 router.use('/pay', require('./getPaymentWithStripe.js'))
 
+router.use('/paypal', require('./getPaymentWithPaypal.js'))
+
 module.exports = router;

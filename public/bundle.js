@@ -28226,6 +28226,7 @@
 	
 					_this.getToken = _this.getToken.bind(_this);
 					_this.responseHandler = _this.responseHandler.bind(_this);
+					_this.checkOutWithPaypal = _this.checkOutWithPaypal.bind(_this);
 					return _this;
 			}
 	
@@ -28233,6 +28234,32 @@
 					key: 'componentDidMount',
 					value: function componentDidMount() {
 							Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
+	
+							paypal.use(['login'], function (login) {
+									login.render({
+											"appid": "xxx",
+											"authend": "sandbox",
+											"scopes": "openid",
+											"containerid": "lippButton",
+											"locale": "en-us",
+											"returnurl": "http://localhost:8080/api/paypal"
+									});
+							});
+					}
+			}, {
+					key: 'checkOutWithPaypal',
+					value: function checkOutWithPaypal() {
+							paypal.use(['login'], function (login) {
+									login.render({
+											"appid": "Ae5y5mFfQ0Y9kK690MWIXQfe57s0rtKgi82ptIL-t9asvNTlW226WvwqszqH33iLpmuiUcp6GX36FpNI",
+											"authend": "sandbox",
+											"scopes": "openid",
+											"containerid": "lippButton",
+											"locale": "en-us",
+											"returnurl": "/api/paypal"
+									});
+							});
+							// axios.get('/api/paypal')
 					}
 			}, {
 					key: 'getToken',
@@ -28330,6 +28357,15 @@
 													)
 											),
 											_react2.default.createElement('input', { type: 'submit', className: 'submit', value: 'Submit Payment', disabled: this.state.buttonStatus ? 'disabled' : '' })
+									),
+									_react2.default.createElement(
+											'div',
+											null,
+											_react2.default.createElement(
+													'span',
+													{ id: 'lippButton' },
+													'  '
+											)
 									)
 							);
 					}

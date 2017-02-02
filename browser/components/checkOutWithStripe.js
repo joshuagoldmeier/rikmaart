@@ -13,12 +13,39 @@ export default class checkOut extends React.Component {
 
   	  	this.getToken = this.getToken.bind(this);
   	  	this.responseHandler = this.responseHandler.bind(this)
+  	  	this.checkOutWithPaypal = this.checkOutWithPaypal.bind(this)
 	  }
 
 	  componentDidMount(){
 		Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv')
+
+        paypal.use( ['login'], function (login) {
+          login.render ({
+            "appid":"xxx",
+            "authend":"sandbox",
+            "scopes":"openid",
+            "containerid":"lippButton",
+            "locale":"en-us",
+            "returnurl":"http://localhost:8080/api/paypal"
+          })
+        })
+ 
+
 	  }
 
+	  checkOutWithPaypal(){
+	  	paypal.use( ['login'], function (login) {
+		  login.render ({
+		    "appid":"Ae5y5mFfQ0Y9kK690MWIXQfe57s0rtKgi82ptIL-t9asvNTlW226WvwqszqH33iLpmuiUcp6GX36FpNI",
+		    "authend":"sandbox",
+		    "scopes":"openid",
+		    "containerid":"lippButton",
+		    "locale":"en-us",
+		    "returnurl":"/api/paypal"
+		  });
+		});
+	  	// axios.get('/api/paypal')
+	  }
 
 	  getToken(event){
 	  	event.preventDefault();
@@ -80,6 +107,11 @@ export default class checkOut extends React.Component {
 					  <input type="submit" className="submit" value="Submit Payment" disabled={this.state.buttonStatus ? 'disabled' : ''}/>
 
 					</form>
+
+					<div>
+						<span id='lippButton'>  </span>
+
+					</div>
 
 
 			</div>
