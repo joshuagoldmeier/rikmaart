@@ -20,9 +20,13 @@ router.post('/', function(req,res,next){
 
 	const callback = function(err, charge) {
 		// if err throw error
+		if (err){
+			console.log("err: " + err);
+			res.sendStatus(404);
+		}
 		if(charge.outcome.network_status ==='approved_by_network'){
 			 res.sendStatus(200)
-		}	
+		}
 	};
 
 	stripe.charges.create({

@@ -36,7 +36,7 @@ export default class checkOut extends React.Component {
 	   			this.setState({buttonStatus: false})
 	   			axios.post('/api/pay', {stripeToken: response.id})
 	   			console.log(this.state)
-      		}	
+      		}
     	}
 
 
@@ -44,7 +44,7 @@ export default class checkOut extends React.Component {
 	  	return(
 	  		<div>
 				<form onSubmit={event => this.getToken(event)} action="/api/pay" method="POST" id="payment-form">
-				
+
 					  <span className="payment-errors"></span>
 
 					  <div className="form-row">
@@ -77,7 +77,7 @@ export default class checkOut extends React.Component {
 					    </label>
 					  </div>
 
-					  <input type="submit" className="submit" value="Submit Payment" disabled={this.state.buttonStatus ? 'disabled' : ''}/> 
+					  <input type="submit" className="submit" value="Submit Payment" disabled={this.state.buttonStatus ? 'disabled' : ''}/>
 
 					</form>
 
