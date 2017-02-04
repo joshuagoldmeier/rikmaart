@@ -7,7 +7,9 @@ import CustomOrder from './components/CustomOrder';
 import About from './components/About';
 import Contact from './components/Contact';
 import payWithStripe from './components/checkOutWithStripe';
-
+import confirmation from './components/confirmationPage';
+import errorPayment from './components/paymentError';
+import loadingConfirmation from './components/loadingConfirmation';
 
 
 const Routes = () => (
@@ -19,7 +21,10 @@ const Routes = () => (
       <Route path="about" component={About} />
       <Route path="contact" component={Contact} />
       <Route path="pay" component={payWithStripe} />
-
+      <Route path="confirmation" component={confirmation} />
+      <Route path="paymenterror" component={errorPayment} />
+      <Route path="loadingconfirmation" component={loadingConfirmation} />
+      
     </Route>
   </Router>
 );

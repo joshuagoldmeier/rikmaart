@@ -21513,6 +21513,18 @@
 	
 	var _checkOutWithStripe2 = _interopRequireDefault(_checkOutWithStripe);
 	
+	var _confirmationPage = __webpack_require__(276);
+	
+	var _confirmationPage2 = _interopRequireDefault(_confirmationPage);
+	
+	var _paymentError = __webpack_require__(277);
+	
+	var _paymentError2 = _interopRequireDefault(_paymentError);
+	
+	var _loadingConfirmation = __webpack_require__(278);
+	
+	var _loadingConfirmation2 = _interopRequireDefault(_loadingConfirmation);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Routes = function Routes() {
@@ -21527,7 +21539,10 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'customorder', component: _CustomOrder2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'about', component: _About2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'contact', component: _Contact2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'pay', component: _checkOutWithStripe2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: 'pay', component: _checkOutWithStripe2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'confirmation', component: _confirmationPage2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'paymenterror', component: _paymentError2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'loadingconfirmation', component: _loadingConfirmation2.default })
 	    )
 	  );
 	};
@@ -28188,7 +28203,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-			value: true
+					value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -28200,6 +28215,8 @@
 	var _axios = __webpack_require__(251);
 	
 	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _reactRouter = __webpack_require__(179);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28213,165 +28230,179 @@
 	// Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
 	
 	var checkOut = function (_React$Component) {
-			_inherits(checkOut, _React$Component);
+					_inherits(checkOut, _React$Component);
 	
-			function checkOut() {
-					_classCallCheck(this, checkOut);
+					function checkOut() {
+									_classCallCheck(this, checkOut);
 	
-					var _this = _possibleConstructorReturn(this, (checkOut.__proto__ || Object.getPrototypeOf(checkOut)).call(this));
+									var _this = _possibleConstructorReturn(this, (checkOut.__proto__ || Object.getPrototypeOf(checkOut)).call(this));
 	
-					_this.state = {
-							buttonStatus: false
-					};
+									_this.state = {
+													buttonStatus: false
+									};
 	
-					_this.getToken = _this.getToken.bind(_this);
-					_this.responseHandler = _this.responseHandler.bind(_this);
-					_this.checkOutWithPaypal = _this.checkOutWithPaypal.bind(_this);
-					return _this;
-			}
+									_this.getToken = _this.getToken.bind(_this);
+									_this.responseHandler = _this.responseHandler.bind(_this);
+									_this.checkOutWithPaypal = _this.checkOutWithPaypal.bind(_this);
 	
-			_createClass(checkOut, [{
-					key: 'componentDidMount',
-					value: function componentDidMount() {
-							Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
-	
-							paypal.use(['login'], function (login) {
-									login.render({
-											"appid": "xxx",
-											"authend": "sandbox",
-											"scopes": "openid",
-											"containerid": "lippButton",
-											"locale": "en-us",
-											"returnurl": "http://localhost:8080/api/paypal"
-									});
-							});
+									return _this;
 					}
-			}, {
-					key: 'checkOutWithPaypal',
-					value: function checkOutWithPaypal() {
-							paypal.use(['login'], function (login) {
-									login.render({
-											"appid": "Ae5y5mFfQ0Y9kK690MWIXQfe57s0rtKgi82ptIL-t9asvNTlW226WvwqszqH33iLpmuiUcp6GX36FpNI",
-											"authend": "sandbox",
-											"scopes": "openid",
-											"containerid": "lippButton",
-											"locale": "en-us",
-											"returnurl": "/api/paypal"
-									});
-							});
-							// axios.get('/api/paypal')
-					}
-			}, {
-					key: 'getToken',
-					value: function getToken(event) {
-							event.preventDefault();
-							this.setState({ buttonStatus: true });
 	
-							var temp = this.state.buttonStatus;
-							console.log(event.currentTarget);
-							Stripe.card.createToken(event.currentTarget, this.responseHandler);
-					}
-			}, {
-					key: 'responseHandler',
-					value: function responseHandler(status, response) {
-							if (response.error) {} else {
-									this.setState({ buttonStatus: false });
-									_axios2.default.post('/api/pay', { stripeToken: response.id });
-									console.log(this.state);
-							}
-					}
-			}, {
-					key: 'render',
-					value: function render() {
-							var _this2 = this;
+					_createClass(checkOut, [{
+									key: 'componentDidMount',
+									value: function componentDidMount() {
+													Stripe.setPublishableKey('pk_test_ySXpzVzuSziQKkNfPPaWYSBv');
 	
-							return _react2.default.createElement(
-									'div',
-									null,
-									_react2.default.createElement(
-											'form',
-											{ onSubmit: function onSubmit(event) {
-															return _this2.getToken(event);
-													}, action: '/api/pay', method: 'POST', id: 'payment-form' },
-											_react2.default.createElement('span', { className: 'payment-errors' }),
-											_react2.default.createElement(
-													'div',
-													{ className: 'form-row' },
-													_react2.default.createElement(
-															'label',
-															null,
-															_react2.default.createElement(
-																	'span',
+													paypal.Button.render({
+	
+																	env: 'sandbox', // Optional: specify 'sandbox' environment
+	
+																	payment: function payment(resolve, reject) {
+	
+																					var CREATE_PAYMENT_URL = 'http://localhost:8080/api/paypal/create';
+	
+																					paypal.request.post(CREATE_PAYMENT_URL).then(function (data) {
+																									// console.log('hey', data)
+																									resolve(data.id);
+																					}).catch(function (err) {
+																									reject(err);
+																					});
+																	},
+	
+																	onAuthorize: function onAuthorize(data) {
+	
+																					// Note: you can display a confirmation page before executing
+																					_reactRouter.hashHistory.push('/loadingconfirmation');
+																					var EXECUTE_PAYMENT_URL = 'http://localhost:8080/api/paypal/exec';
+	
+																					var payload = {
+																									paymentID: data.paymentID,
+																									payerID: data.payerID
+																					};
+	
+																					// var EXECUTE_PAYMENT_URL = `https://api.sandbox.paypal.com/v1/payments/payment/${payload.paymentID}/execute`
+	
+																					paypal.request.post(EXECUTE_PAYMENT_URL, payload)
+																					// axios.post(EXECUTE_PAYMENT_URL, payload)
+																					.then(function (data) {
+																									console.log('great successs!!!!!');
+																									/* Go to a success page */
+																									_reactRouter.hashHistory.push('/confirmation');
+																					}).catch(function (err) {
+																									console.log('ugh an error!!!!');
+																									_reactRouter.hashHistory.push('/paymenterror');
+																									/* Go 	to an error page  */
+																					});
+																	}
+	
+													}, '#paypal-button');
+									}
+					}, {
+									key: 'checkOutWithPaypal',
+									value: function checkOutWithPaypal() {}
+					}, {
+									key: 'getToken',
+									value: function getToken(event) {
+													event.preventDefault();
+													this.setState({ buttonStatus: true });
+	
+													var temp = this.state.buttonStatus;
+													console.log(event.currentTarget);
+													Stripe.card.createToken(event.currentTarget, this.responseHandler);
+									}
+					}, {
+									key: 'responseHandler',
+									value: function responseHandler(status, response) {
+													if (response.error) {} else {
+																	this.setState({ buttonStatus: false });
+																	_axios2.default.post('/api/pay', { stripeToken: response.id });
+																	console.log(this.state);
+													}
+									}
+					}, {
+									key: 'render',
+									value: function render() {
+													var _this2 = this;
+	
+													return _react2.default.createElement(
+																	'div',
 																	null,
-																	'Card Number'
-															),
-															_react2.default.createElement('input', { type: 'text', size: '20', 'data-stripe': 'number' })
-													)
-											),
-											_react2.default.createElement(
-													'div',
-													{ className: 'form-row' },
-													_react2.default.createElement(
-															'label',
-															null,
-															_react2.default.createElement(
-																	'span',
-																	null,
-																	'Expiration (MM/YY)'
-															),
-															_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_month' })
-													),
-													_react2.default.createElement(
-															'span',
-															null,
-															' / '
-													),
-													_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_year' })
-											),
-											_react2.default.createElement(
-													'div',
-													{ className: 'form-row' },
-													_react2.default.createElement(
-															'label',
-															null,
-															_react2.default.createElement(
-																	'span',
-																	null,
-																	'CVC'
-															),
-															_react2.default.createElement('input', { type: 'text', size: '4', 'data-stripe': 'cvc' })
-													)
-											),
-											_react2.default.createElement(
-													'div',
-													{ className: 'form-row' },
-													_react2.default.createElement(
-															'label',
-															null,
-															_react2.default.createElement(
-																	'span',
-																	null,
-																	'Billing ZIP Code'
-															),
-															_react2.default.createElement('input', { type: 'text', size: '6', 'data-stripe': 'address_zip' })
-													)
-											),
-											_react2.default.createElement('input', { type: 'submit', className: 'submit', value: 'Submit Payment', disabled: this.state.buttonStatus ? 'disabled' : '' })
-									),
-									_react2.default.createElement(
-											'div',
-											null,
-											_react2.default.createElement(
-													'span',
-													{ id: 'lippButton' },
-													'  '
-											)
-									)
-							);
-					}
-			}]);
+																	_react2.default.createElement(
+																					'form',
+																					{ onSubmit: function onSubmit(event) {
+																													return _this2.getToken(event);
+																									}, action: '/api/pay', method: 'POST', id: 'payment-form' },
+																					_react2.default.createElement('span', { className: 'payment-errors' }),
+																					_react2.default.createElement(
+																									'div',
+																									{ className: 'form-row' },
+																									_react2.default.createElement(
+																													'label',
+																													null,
+																													_react2.default.createElement(
+																																	'span',
+																																	null,
+																																	'Card Number'
+																													),
+																													_react2.default.createElement('input', { type: 'text', size: '20', 'data-stripe': 'number' })
+																									)
+																					),
+																					_react2.default.createElement(
+																									'div',
+																									{ className: 'form-row' },
+																									_react2.default.createElement(
+																													'label',
+																													null,
+																													_react2.default.createElement(
+																																	'span',
+																																	null,
+																																	'Expiration (MM/YY)'
+																													),
+																													_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_month' })
+																									),
+																									_react2.default.createElement(
+																													'span',
+																													null,
+																													' / '
+																									),
+																									_react2.default.createElement('input', { type: 'text', size: '2', 'data-stripe': 'exp_year' })
+																					),
+																					_react2.default.createElement(
+																									'div',
+																									{ className: 'form-row' },
+																									_react2.default.createElement(
+																													'label',
+																													null,
+																													_react2.default.createElement(
+																																	'span',
+																																	null,
+																																	'CVC'
+																													),
+																													_react2.default.createElement('input', { type: 'text', size: '4', 'data-stripe': 'cvc' })
+																									)
+																					),
+																					_react2.default.createElement(
+																									'div',
+																									{ className: 'form-row' },
+																									_react2.default.createElement(
+																													'label',
+																													null,
+																													_react2.default.createElement(
+																																	'span',
+																																	null,
+																																	'Billing ZIP Code'
+																													),
+																													_react2.default.createElement('input', { type: 'text', size: '6', 'data-stripe': 'address_zip' })
+																									)
+																					),
+																					_react2.default.createElement('input', { type: 'submit', className: 'submit', value: 'Submit Payment', disabled: this.state.buttonStatus ? 'disabled' : '' })
+																	),
+																	_react2.default.createElement('div', { id: 'paypal-button' })
+													);
+									}
+					}]);
 	
-			return checkOut;
+					return checkOut;
 	}(_react2.default.Component);
 	
 	// export default checkOut
@@ -29867,6 +29898,153 @@
 	  };
 	};
 
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+			value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var confirmationPage = function (_React$Component) {
+			_inherits(confirmationPage, _React$Component);
+	
+			function confirmationPage() {
+					_classCallCheck(this, confirmationPage);
+	
+					return _possibleConstructorReturn(this, (confirmationPage.__proto__ || Object.getPrototypeOf(confirmationPage)).call(this));
+			}
+	
+			_createClass(confirmationPage, [{
+					key: 'render',
+					value: function render() {
+							return _react2.default.createElement(
+									'div',
+									null,
+									'Congrats! your payment was created'
+							);
+					}
+			}]);
+	
+			return confirmationPage;
+	}(_react2.default.Component);
+	
+	exports.default = confirmationPage;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+			value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var paymentError = function (_React$Component) {
+			_inherits(paymentError, _React$Component);
+	
+			function paymentError() {
+					_classCallCheck(this, paymentError);
+	
+					return _possibleConstructorReturn(this, (paymentError.__proto__ || Object.getPrototypeOf(paymentError)).call(this));
+			}
+	
+			_createClass(paymentError, [{
+					key: 'render',
+					value: function render() {
+							return _react2.default.createElement(
+									'div',
+									null,
+									'Sorry, something went wrong with your payment!'
+							);
+					}
+			}]);
+	
+			return paymentError;
+	}(_react2.default.Component);
+	
+	exports.default = paymentError;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+			value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var loadingConfirmation = function (_React$Component) {
+			_inherits(loadingConfirmation, _React$Component);
+	
+			function loadingConfirmation() {
+					_classCallCheck(this, loadingConfirmation);
+	
+					return _possibleConstructorReturn(this, (loadingConfirmation.__proto__ || Object.getPrototypeOf(loadingConfirmation)).call(this));
+			}
+	
+			_createClass(loadingConfirmation, [{
+					key: 'render',
+					value: function render() {
+							return _react2.default.createElement(
+									'div',
+									null,
+									'This is a confirmation of your purchase, but the payment didn\'t execute just yet!'
+							);
+					}
+			}]);
+	
+			return loadingConfirmation;
+	}(_react2.default.Component);
+	
+	exports.default = loadingConfirmation;
 
 /***/ }
 /******/ ]);
